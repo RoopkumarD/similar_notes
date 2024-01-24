@@ -1,5 +1,12 @@
+import warnings
+
 from sentence_transformers import SentenceTransformer, util
 from torch import Tensor, stack
+
+# to remove typed storage warning
+warnings.filterwarnings(
+    "ignore", category=UserWarning, message="TypedStorage is deprecated"
+)
 
 model = SentenceTransformer("all-MiniLM-L6-v2")
 
