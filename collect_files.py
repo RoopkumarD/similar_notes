@@ -1,4 +1,3 @@
-import time
 from datetime import datetime
 from pathlib import Path
 
@@ -14,8 +13,7 @@ def extract_data_from_md(
     note_extension: str,
     cache_data: dict[Path, tuple[Tensor, datetime]],
 ):
-    print("Getting the file names")
-    start = time.perf_counter_ns()
+    changed = False
     md_files = [
         path
         for path in Path(path_string).rglob(f"*{note_extension}")
@@ -23,10 +21,12 @@ def extract_data_from_md(
         and str(path.relative_to(path_string)) not in exclude_file
         and not any(ed in str(path.parent) for ed in exclude_dir)
     ]
-    print((time.perf_counter_ns() - start) / 10**9)
+    # this takes care of deletion
+    # but for case where we delete and add new note, change will become True
+    # with help of below
+    if len(md_files) != len(cache_data.keys()):
+        changed = True
 
-    print("Forming new_cache_data")
-    start = time.perf_counter_ns()
     new_cache_data = dict()
     updates_new = dict()
     for note in md_files:
@@ -36,11 +36,9 @@ def extract_data_from_md(
             updates_new[note] = note.read_text()
         else:
             new_cache_data[note] = cache_data[note]
-    print((time.perf_counter_ns() - start) / 10**9)
 
-    print("If there is update it will embed new")
-    start = time.perf_counter_ns()
     if len(updates_new) > 0:
+        changed = True
         # now creating embedding of new and update
         updates_new_embedding = embed(list(updates_new.values()), True)
 
@@ -51,6 +49,4 @@ def extract_data_from_md(
                 datetime.fromtimestamp(key.stat().st_mtime),
             )
 
-    print((time.perf_counter_ns() - start) / 10**9)
-
-    return new_cache_data
+    return new_cache_data, changed

@@ -1,13 +1,12 @@
 #!/bin/env python3
 import sys
-import time
 from pathlib import Path
-from pickle import dump, load
+from pickle import HIGHEST_PROTOCOL, dump, load
 
 from collect_files import extract_data_from_md
 from embedding import embed, similarity
 
-CONFIG_DIR = "/home/roopkumar/simnotesconfig"
+CONFIG_DIR = "/home/roopkumar/.config/simnotesconfig"
 
 
 def main(query: str):
@@ -22,48 +21,46 @@ def main(query: str):
 
     # find if there is cache data or not
     print("Finding cache data and building corpus to compare against")
-    start = time.perf_counter_ns()
     cache_data = dict()
     if Path(f"{CONFIG_DIR}/cache_data.pickle").exists() == True:
         with open(f"{CONFIG_DIR}/cache_data.pickle", "rb") as f:
             cache_data = load(f)
 
-    cache_data = extract_data_from_md(
+    print("Checking for new/update and embedding it")
+    cache_data, changed = extract_data_from_md(
         config["notes_dir"],
         config["exclude_dir"],
         config["exclude_file"],
         config["note_extension"],
         cache_data,
     )
-    with open(f"{CONFIG_DIR}/cache_data.pickle", "wb") as f:
-        dump(cache_data, f)
-    print((time.perf_counter_ns() - start) / 10**9)
 
     if len(cache_data) == 0:
         raise Exception("You don't have any notes in md files")
 
+    # don't have to worry about writing as pickle won't duplicate it
+    # https://docs.python.org/3/library/pickle.html#comparison-with-marshal first point
+    if changed == True:
+        with open(f"{CONFIG_DIR}/cache_data.pickle", "wb") as f:
+            dump(cache_data, f, protocol=HIGHEST_PROTOCOL)
+
     # after getting the embedding of notes
     print("Embedding the query")
-    start = time.perf_counter_ns()
     query_embed = embed(query, True)
-    print((time.perf_counter_ns() - start) / 10**9)
 
     # now getting similarity with this
     print("Finding similarity")
-    start = time.perf_counter_ns()
     corpus = [cache_data[key][0] for key in cache_data]
     hit = similarity(query_embed, corpus)
-    print((time.perf_counter_ns() - start) / 10**9)
 
     # then printing the similarity score with filename and returning
     files = list(cache_data.keys())
-    print("Top files which are similar to given query:")
-    print()
-    for h in hit:
-        print(
-            f"{str(files[h['corpus_id']]).replace(config['notes_dir'], '')} with score {h['score']}"
-        )
-        print()
+    print("\n\n======================\n\n")
+    print("Top files which are similar to given query:\n")
+    print("Value near 1 are those docs which are close to note")
+    print("Value going down from 1 is less relavant to note\n")
+    for score, id in zip(hit[0], hit[1]):
+        print(f"{str(files[id]).replace(config['notes_dir'], '')} with score {score}\n")
 
     return
 
