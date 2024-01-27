@@ -1,4 +1,3 @@
-#!/bin/env python3
 import sys
 from pathlib import Path
 from pickle import HIGHEST_PROTOCOL, dump, load
@@ -6,10 +5,28 @@ from pickle import HIGHEST_PROTOCOL, dump, load
 from collect_files import extract_data_from_md
 from embedding import embed, similarity
 
-CONFIG_DIR = "/home/roopkumar/.config/simnotesconfig"
+from . import utils
+
+CONFIG_DIR = utils.get_config_dir()
 
 
-def main(query: str):
+def main():
+    # getting the query
+    query = ""
+    if len(sys.argv) == 2:
+        query = sys.argv[1]
+        if utils.is_stdin_available() == True:
+            print("Provide Query text from one input source only")
+            return
+    else:
+        if utils.is_stdin_available() == True:
+            query = sys.stdin.read().strip()
+        else:
+            print("USAGE:\nEither provide query text via stdin or args")
+            print("Stdin Example: cat temp.md | simnotes")
+            print('Args Example: simnotes "Query Text"')
+            return
+
     with open(f"{CONFIG_DIR}/config.txt", "r") as f:
         config = dict()
         for line in f.readlines():
@@ -56,14 +73,11 @@ def main(query: str):
     # then printing the similarity score with filename and returning
     files = list(cache_data.keys())
     print("\n\n======================\n\n")
-    print("Top files which are similar to given query:\n")
-    print("Value near 1 are those docs which are close to note")
-    print("Value going down from 1 is less relavant to note\n")
+    print("Top files which are similar to given query:")
+    print(
+        "Value range from -1 to 1, where going toward 1 means note is close to query\n"
+    )
     for score, id in zip(hit[0], hit[1]):
         print(f"{str(files[id]).replace(config['notes_dir'], '')} with score {score}\n")
 
     return
-
-
-if __name__ == "__main__":
-    main(sys.stdin.read())
