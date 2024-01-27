@@ -2,10 +2,7 @@ import sys
 from pathlib import Path
 from pickle import HIGHEST_PROTOCOL, dump, load
 
-from collect_files import extract_data_from_md
-from embedding import embed, similarity
-
-from . import utils
+from . import collect_files, embedding, utils
 
 CONFIG_DIR = utils.get_config_dir()
 
@@ -13,28 +10,30 @@ CONFIG_DIR = utils.get_config_dir()
 def main():
     # getting the query
     query = ""
-    if len(sys.argv) == 2:
-        query = sys.argv[1]
-        if utils.is_stdin_available() == True:
-            print("Provide Query text from one input source only")
-            return
-    else:
-        if utils.is_stdin_available() == True:
-            query = sys.stdin.read().strip()
-        else:
-            print("USAGE:\nEither provide query text via stdin or args")
-            print("Stdin Example: cat temp.md | simnotes")
-            print('Args Example: simnotes "Query Text"')
-            return
+    if len(sys.argv) != 3 or sys.argv[1] not in ["file", "text"]:
+        print("USAGE:\nEither provide query text or file name to read text from")
+        print("File Example: simnotes file filename")
+        print('Query Example: simnotes text "Query Text"')
+        return
 
-    with open(f"{CONFIG_DIR}/config.txt", "r") as f:
-        config = dict()
-        for line in f.readlines():
-            c = line.strip().split("=")
-            if c[0] == "exclude_dir" or c[0] == "exclude_file":
-                config[c[0]] = c[1].split(",")
-            else:
-                config[c[0]] = c[1]
+    config = dict()
+    config_file_path = f"{CONFIG_DIR}/config.txt"
+
+    try:
+        with open(config_file_path, "r") as f:
+            config = dict()
+            for line in f.readlines():
+                c = line.strip().split("=")
+                if c[0] == "exclude_dir" or c[0] == "exclude_file":
+                    config[c[0]] = c[1].split(",")
+                else:
+                    config[c[0]] = c[1]
+    except FileNotFoundError:
+        print(f"Error: Config file not found at {config_file_path}")
+        return
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return
 
     # find if there is cache data or not
     print("Finding cache data and building corpus to compare against")
@@ -44,7 +43,7 @@ def main():
             cache_data = load(f)
 
     print("Checking for new/update and embedding it")
-    cache_data, changed = extract_data_from_md(
+    cache_data, changed = collect_files.extract_data_from_md(
         config["notes_dir"],
         config["exclude_dir"],
         config["exclude_file"],
@@ -61,14 +60,26 @@ def main():
         with open(f"{CONFIG_DIR}/cache_data.pickle", "wb") as f:
             dump(cache_data, f, protocol=HIGHEST_PROTOCOL)
 
+    if sys.argv[1] == "text":
+        query = sys.argv[2]
+    elif sys.argv[1] == "file":
+        with open(sys.argv[2], "r") as queryFile:
+            query = queryFile.read().strip()
+
+        if (
+            Path(sys.argv[2]).absolute().is_relative_to(Path(config["notes_dir"]))
+            == True
+        ):
+            del cache_data[Path(sys.argv[2]).absolute()]
+
     # after getting the embedding of notes
     print("Embedding the query")
-    query_embed = embed(query, True)
+    query_embed = embedding.embed(query, True)
 
     # now getting similarity with this
     print("Finding similarity")
     corpus = [cache_data[key][0] for key in cache_data]
-    hit = similarity(query_embed, corpus)
+    hit = embedding.similarity(query_embed, corpus)
 
     # then printing the similarity score with filename and returning
     files = list(cache_data.keys())

@@ -1,5 +1,4 @@
 import os
-import selectors
 import sys
 
 
@@ -25,14 +24,3 @@ def get_config_dir():
         config_dir = os.path.join(home_dir, ".simnotesconfig")
 
     return config_dir
-
-
-def is_stdin_available():
-    selector = selectors.DefaultSelector()
-    key = selector.register(sys.stdin, selectors.EVENT_READ)
-
-    events = selector.select(0.1)  # Set a timeout of 0.1 seconds
-
-    selector.unregister(sys.stdin)
-
-    return bool(events)

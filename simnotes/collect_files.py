@@ -3,7 +3,7 @@ from pathlib import Path
 
 from torch import Tensor
 
-from embedding import embed
+from . import embedding
 
 
 def extract_data_from_md(
@@ -40,7 +40,7 @@ def extract_data_from_md(
     if len(updates_new) > 0:
         changed = True
         # now creating embedding of new and update
-        updates_new_embedding = embed(list(updates_new.values()), True)
+        updates_new_embedding = embedding.embed(list(updates_new.values()), True)
 
         # then updating the cache data and returning it
         for i, key in enumerate(updates_new):
