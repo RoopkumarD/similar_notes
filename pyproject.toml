@@ -13,7 +13,7 @@ readme = "README.md"
 license = {file = "LICENSE.md"}
 keywords = ["Vector embeddings", "similarity", "CLI", "notes", "finder", "search", "tool", "text analysis"]
 dependencies = [
-    'sentence-transformers',
+    'sentence-transformers>=2.2.2',
 ]
 
 [project.scripts]

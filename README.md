@@ -21,7 +21,7 @@ following the steps below:
     pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
     ```
 
-Now, install the SimNotes CLI tool:
+Now, install the SimiNotes CLI tool:
 
 ```bash
 pip install siminotes
@@ -124,7 +124,7 @@ This project is licensed under the MIT License.
 
 ## Contributing
 
-Feel free to contribute to SimNotes by creating issues or submitting pull requests.
+Feel free to contribute to SimiNotes by creating issues or submitting pull requests.
 
 ## Acknowledgments
 
@@ -139,3 +139,4 @@ improve results then consider this roop
 
 - If it is taking more memory, then we can quantise the vectors into int8
 [Quantisation Guide](https://www.sbert.net/examples/training/distillation/README.html#quantization)
+[Github Repo to check](https://github.com/davidberenstein1957/fast-sentence-transformers)
