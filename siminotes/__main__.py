@@ -12,8 +12,8 @@ def main():
     query = ""
     if len(sys.argv) != 3 or sys.argv[1] not in ["file", "text"]:
         print("USAGE:\nEither provide query text or file name to read text from")
-        print("File Example: simnotes file filename")
-        print('Query Example: simnotes text "Query Text"')
+        print("File Example: siminotes file filename")
+        print('Query Example: siminotes text "Query Text"')
         return
 
     config = dict()

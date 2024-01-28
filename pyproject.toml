@@ -3,21 +3,21 @@ requires = ["setuptools>=69.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "simnotes"
+name = "siminotes"
 authors = [
   {name = "Roopkumar Das", email = "roopkumards@gmail.com"},
 ]
-version = "0.1.1"
+version = "0.1.0"
 description = "A CLI tool for discovering similar notes within your note collection."
 readme = "README.md"
 license = {file = "LICENSE.md"}
 keywords = ["Vector embeddings", "similarity", "CLI", "notes", "finder", "search", "tool", "text analysis"]
 dependencies = [
-    "sentence-transformers == 2.2.2",
+    'sentence-transformers',
 ]
 
 [project.scripts]
-simnotes = "simnotes.__main__:main"
+siminotes = "siminotes.__main__:main"
 
 [project.urls]
 Homepage = "https://github.com/RoopkumarD/similar_notes"

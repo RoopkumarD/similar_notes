@@ -10,17 +10,17 @@ def get_config_dir():
 
     # Check the operating system and construct the config directory path
     if sys.platform.startswith("linux"):
-        config_dir = os.path.join(home_dir, ".config", "simnotesconfig")
+        config_dir = os.path.join(home_dir, ".config", "siminotesconfig")
     elif sys.platform.startswith("darwin"):  # macOS
-        config_dir = os.path.join(home_dir, ".simnotesconfig")
+        config_dir = os.path.join(home_dir, ".siminotesconfig")
     elif sys.platform.startswith("win"):
         # For Windows, use AppData\Roaming for per-user configuration
         appData = os.getenv("APPDATA")
         if appData == None:
             raise Exception("APPDATA env not found")
-        config_dir = os.path.join(appData, "Simnotes")
+        config_dir = os.path.join(appData, "Siminotes")
     else:
         # Default to a generic hidden directory in the home directory
-        config_dir = os.path.join(home_dir, ".simnotesconfig")
+        config_dir = os.path.join(home_dir, ".siminotesconfig")
 
     return config_dir

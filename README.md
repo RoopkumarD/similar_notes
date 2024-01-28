@@ -1,6 +1,6 @@
-# SimNotes - CLI Tool for Similar Note Retrieval
+# SimiNotes - CLI Tool for Similar Note Retrieval
 
-SimNotes is a command-line interface (CLI) tool written in Python that enables users to discover similar notes within their
+SimiNotes is a command-line interface (CLI) tool written in Python that enables users to discover similar notes within their
 notes collection. The tool utilizes sentence embeddings with sbert to compare a given query against a corpus of user notes.
 
 ## Features
@@ -24,12 +24,12 @@ following the steps below:
 Now, install the SimNotes CLI tool:
 
 ```bash
-pip install simnotes
+pip install siminotes
 ```
 
 ## Configuration
 
-Before using the CLI, configure some essential values, such as the notes directory and exclusions. SimNotes uses a
+Before using the CLI, configure some essential values, such as the notes directory and exclusions. SimiNotes uses a
 configuration file (`config.txt`) to set preferences. Configure the tool by creating the file in the appropriate configuration
 directory.
 
@@ -38,13 +38,13 @@ directory.
 - Linux:
 
 ```plaintext
-~/.config/simnotesconfig/
+~/.config/siminotesconfig/
 ```
 
 - macOS:
 
 ```plaintext
-~/.simnotesconfig/
+~/.siminotesconfig/
 ```
 
 - Windows:
@@ -52,13 +52,13 @@ directory.
 For Windows, use AppData\Roaming for per-user configuration:
 
 ```plaintext
-AppData\Roaming\Simnotes\
+AppData\Roaming\Siminotes\
 ```
 
 Alternatively, place `config.txt` in the home directory:
 
 ```plaintext
-~/.simnotesconfig/
+~/.siminotesconfig/
 ```
 
 ### Configuration File (`config.txt`)
@@ -91,13 +91,13 @@ Now let's use our cli,
 - Query via Text:
 
 ```bash
-simnotes text "Your Query Text"
+siminotes text "Your Query Text"
 ```
 
 - Query via File:
 
 ```bash
-simnotes file filename
+siminotes file filename
 ```
 
 Both will result in,
