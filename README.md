@@ -1,64 +1,37 @@
 # SimNotes - CLI Tool for Similar Note Retrieval
 
-SimNotes is a command-line interface (CLI) tool written in Python that allows users to find similar notes within their notes
-collection. The tool utilizes sentence embeddings with sbert to compare a given query against a corpus of user notes.
+SimNotes is a command-line interface (CLI) tool written in Python that enables users to discover similar notes within their
+notes collection. The tool utilizes sentence embeddings with sbert to compare a given query against a corpus of user notes.
 
 ## Features
 
-- Embedding: Utilizes sbert to generate vector embeddings for notes.
-- Similarity Search: Finds notes similar to a given query based on embeddings.
-- Configurable: Allows users to configure directories, file extensions, and exclusion criteria.
+- **Embedding:** Utilizes sbert to generate vector embeddings for notes.
+- **Similarity Search:** Finds notes similar to a given query based on embeddings.
+- **Configurable:** Allows users to configure directories, file extensions, and exclusion criteria.
 
 ## Installation
 
-1. Let's first install pytorch library separately
+Before using this CLI tool, ensure that you have Python and pip installed. Additionally, install the PyTorch library by
+following the steps below:
 
-Visit [Pytorch Download](https://pytorch.org/get-started/locally/) and choose your requirements and download the library
-globally
+1. Download and install Python and pip from the [official site](https://www.python.org/).
+2. Install the PyTorch library separately based on your requirements. For the CPU version, use the following command:
 
-If you want pytorch cpu version then go ahead with,
+    ```bash
+    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
+    ```
 
-```bash
-pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-```
-
-1. Clone the repository:
-
-```bash
-git clone https://github.com/your-username/simnotes.git
-cd simnotes
-```
-2. Install dependencies:
+Now, install the SimNotes CLI tool:
 
 ```bash
-pip install -r requirements.txt
-```
-
-3. Run the CLI tool:
-
-```bash
-python simnotes.py "Your Query Text"
-```
-
-## Usage
-
-Command-Line Arguments
-
-- Query via Arguments:
-
-```bash
-python simnotes.py "Your Query Text"
-```
-
-- Query via Standard Input:
-
-```bash
-cat your_note.md | python simnotes.py
+pip install simnotes
 ```
 
 ## Configuration
 
-SimNotes uses a configuration file (config.txt) to set preferences. Make sure to configure the tool before usage.
+Before using the CLI, configure some essential values, such as the notes directory and exclusions. SimNotes uses a
+configuration file (`config.txt`) to set preferences. Configure the tool by creating the file in the appropriate configuration
+directory.
 
 ### Configuration Directory
 
@@ -82,15 +55,15 @@ For Windows, use AppData\Roaming for per-user configuration:
 AppData\Roaming\Simnotes\
 ```
 
-or else can put config.txt at home directiory
+Alternatively, place `config.txt` in the home directory:
 
 ```plaintext
 ~/.simnotesconfig/
 ```
 
-### Configuration File (config.txt)
+### Configuration File (`config.txt`)
 
-Create a config.txt file in the configuration directory. Below is an example configuration:
+Create a `config.txt` file in the configuration directory. Below is an example configuration:
 
 ```plaintext
 notes_dir = /path/to/your/notes
@@ -109,6 +82,42 @@ Configuration Parameters:
 
 - note_extension: The extension of your note files (e.g., .md).
 
+## Usage
+
+Now let's use our cli,
+
+### Command-Line Arguments
+
+- Query via Text:
+
+```bash
+simnotes text "Your Query Text"
+```
+
+- Query via File:
+
+```bash
+simnotes file filename
+```
+
+Both will result in,
+
+```
+Top files which are similar to given query:
+Value range from -1 to 1, where going toward 1 means note is close to query
+
+/... with score 0.43386968970298767
+
+/... with score 0.42138463258743286
+
+...
+
+```
+
+## Troubleshooting
+
+If you encounter any errors or problems with this tool, please open an issue in the repository.
+
 ## License
 
 This project is licensed under the MIT License.
@@ -125,8 +134,8 @@ Feel free to contribute to SimNotes by creating issues or submitting pull reques
 
 - I feel like simple dot product hits are enough to find similar notes but in future if there is need to 
 improve results then consider this roop
-https://www.sbert.net/examples/applications/retrieve_rerank/README.html
-https://youtu.be/zMDBc_Q9Ark?feature=shared
+[Retrieve and Rerank](https://www.sbert.net/examples/applications/retrieve_rerank/README.html)
+[Vid Tut](https://youtu.be/zMDBc_Q9Ark?feature=shared)
 
 - If it is taking more memory, then we can quantise the vectors into int8
-https://www.sbert.net/examples/training/distillation/README.html#quantization
+[Quantisation Guide](https://www.sbert.net/examples/training/distillation/README.html#quantization)
