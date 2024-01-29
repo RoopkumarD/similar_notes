@@ -9,6 +9,10 @@ notes collection. The tool utilizes sentence embeddings with sbert to compare a 
 - **Similarity Search:** Finds notes similar to a given query based on embeddings.
 - **Configurable:** Allows users to configure directories, file extensions, and exclusion criteria.
 
+## Demo Video
+
+https://github.com/RoopkumarD/similar_notes/assets/120183778/29868f4a-20fc-40af-b3b2-4ebf404b3cff
+
 ## Installation
 
 Before using this CLI tool, ensure that you have Python and pip installed. Additionally, install the PyTorch library by
