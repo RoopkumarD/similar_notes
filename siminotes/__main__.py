@@ -52,13 +52,15 @@ def main():
     )
 
     if len(cache_data) == 0:
-        raise Exception("You don't have any notes in md files")
+        raise Exception("You don't have any notes")
 
     # don't have to worry about writing as pickle won't duplicate it
     # https://docs.python.org/3/library/pickle.html#comparison-with-marshal first point
     if changed == True:
         with open(f"{CONFIG_DIR}/cache_data.pickle", "wb") as f:
             dump(cache_data, f, protocol=HIGHEST_PROTOCOL)
+
+    query_embed = None
 
     if sys.argv[1] == "text":
         query = sys.argv[2]
@@ -70,11 +72,13 @@ def main():
             Path(sys.argv[2]).absolute().is_relative_to(Path(config["notes_dir"]))
             == True
         ):
+            query_embed = cache_data[Path(sys.argv[2]).absolute()][0]
             del cache_data[Path(sys.argv[2]).absolute()]
 
     # after getting the embedding of notes
     print("Embedding the query")
-    query_embed = embedding.embed(query, True)
+    if query_embed == None:
+        query_embed = embedding.embed(query, True)
 
     # now getting similarity with this
     print("Finding similarity")

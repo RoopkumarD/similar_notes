@@ -7,7 +7,7 @@ name = "siminotes"
 authors = [
   {name = "Roopkumar Das", email = "roopkumards@gmail.com"},
 ]
-version = "0.1.0"
+version = "0.1.1"
 description = "A CLI tool for discovering similar notes within your note collection."
 readme = "README.md"
 license = {file = "LICENSE.md"}
